@@ -7,6 +7,7 @@
 
 #include "board.h"
 #include "cell.h"
+#include "firstdepth.h"
 Board::Board(QWidget* parent)
     : QWidget(parent)
 {
@@ -24,6 +25,7 @@ Board::Board(QWidget* parent)
         mBoard.append(row);
     }
     setLayout(mLayout.get());
+    FirstDepth algorithm;
 }
 
 void Board::resize()

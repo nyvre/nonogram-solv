@@ -34,7 +34,7 @@ void Cell::resize(const int width, const int height)
     mCellPixmap = std::make_shared<QPixmap>(width, height);
     setBorder();
     isFilled() ? fill() : clear();
-    mCellRepresentation->setPixmap(*mCellPixmap.get());
+    mCellRepresentation->setPixmap(*mCellPixmap);
 }
 
 std::shared_ptr<QLabel> Cell::getRepresentation()
@@ -44,16 +44,27 @@ std::shared_ptr<QLabel> Cell::getRepresentation()
 
 void Cell::setColor(QBrush color)
 {
+    int borderWidth {1};
     QPainter painter(mCellPixmap.get());
-    painter.fillRect(1, 1, mCellPixmap->width() - 2, mCellPixmap->height() - 2, color);
-    mCellRepresentation->setPixmap(*mCellPixmap.get());
+    painter.fillRect(
+                borderWidth,
+                borderWidth,
+                mCellPixmap->width() - 1 - borderWidth,
+                mCellPixmap->height() - 1 - borderWidth,
+                color);
+    mCellRepresentation->setPixmap(*mCellPixmap);
 }
 
 void Cell::setBorder()
 {
+    int borderWidth {1};
     QPainter painter(mCellPixmap.get());
     painter.fillRect(mCellPixmap.get()->rect(), QBrush(Qt::black));
-    painter.fillRect(1, 1, mCellPixmap->width() - 2, mCellPixmap->height() - 2, QBrush(Qt::white));
+    painter.fillRect(borderWidth,
+                     borderWidth,
+                     mCellPixmap->width() - 1 - borderWidth,
+                     mCellPixmap->height() - 1 - borderWidth,
+                     QBrush(Qt::white));
     painter.end();
 }
 
