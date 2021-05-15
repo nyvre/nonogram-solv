@@ -10,6 +10,8 @@ public:
     bool isColumnViolated();
     bool areAllRowFulfilled();
     QVector<QVector<bool>> generateRowSolutions(QVector<int> rowHeader, int rowLength);
+    QVector<bool> getColoredVector(int length);
+    bool validateColumn(QVector<int> columnHeader, QVector<bool>column);
 private:
     QVector<QVector<bool>> mBoard;
     QVector<QVector<int>> mRowHeader;

@@ -15,52 +15,49 @@ FirstDepth::FirstDepth()
         }
         mBoard.push_back(row);
     }
-    for (auto result : generateRowSolutions(QVector<int>{1, 1, 1}, 100)) {
-        //qDebug() <<result;
+    for (auto result : generateRowSolutions(QVector<int>{2, 1, 4}, 10)) {
+        qDebug() <<result;
     }
     //generateNextRowSolution({1, 0, 0, 1});
 }
 
 QVector<QVector<bool>> FirstDepth::generateRowSolutions(QVector<int> rowHeader, int rowLength)
 {
-    int sum = 0;
-    for (int number : rowHeader){
-        sum+=number;
-    }
-    QVector<QVector<bool>> vectorOfVectors {};
     if (rowLength <= 0) {
         return {};
     }
-    if (rowLength - (sum + rowHeader.length() - 1) > 0) {
+    if (rowHeader.length() == 0) {
+        return QVector<QVector<bool>>{QVector<bool> (rowLength, false)};
+    }
+    int sumOfRowHeader = std::accumulate(rowHeader.begin(), rowHeader.end(), 0);
+    QVector<QVector<bool>> vectorOfVectors {};
+    if (rowLength > (sumOfRowHeader + rowHeader.length() - 1)) {
         QVector<QVector<bool>> resultFalse {generateRowSolutions(rowHeader, rowLength - 1)};
         for (auto result: resultFalse) {
             QVector<bool> trueResult {false};
-            trueResult+=result;
+            trueResult += result;
             vectorOfVectors.push_back(trueResult);
         }
     }
-    if (rowHeader.length() == 0){
-        QVector<bool> dummyReturn (rowLength, false);
-        return QVector<QVector<bool>>{dummyReturn};
-    }
-    int firstHeaderValue = rowHeader.front();
-    rowHeader.pop_front();
-    QVector<bool> dummyResult;
-    for (int i = 0; i < firstHeaderValue; ++i) {
-        dummyResult.push_back(true);
-    }
-    if (dummyResult.length() < rowLength) {
-        dummyResult.push_back(false);
+    int firstHeaderValue = rowHeader.takeFirst();
+    QVector<bool> coloredVector(firstHeaderValue, true);
+    if (coloredVector.length() < rowLength) {
+        coloredVector.push_back(false);
     }
     QVector<QVector<bool>> resultTrue {generateRowSolutions(rowHeader, rowLength - firstHeaderValue - 1)};
     if (resultTrue.isEmpty()) {
-        vectorOfVectors.push_back(dummyResult);
+        vectorOfVectors.push_back(coloredVector);
     } else {
         for (auto result: resultTrue) {
-                 vectorOfVectors.push_back(dummyResult+result);
+            vectorOfVectors.push_back(coloredVector + result);
         }
     }
     return vectorOfVectors;
+}
 
+bool FirstDepth::validateColumn(QVector<int> columnHeader, QVector<bool> column)
+{
 
 }
+
+
